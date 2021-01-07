@@ -38,6 +38,17 @@ app.get("/api/workouts", async (req, res) => {
     const latestWorkout = await db.Workout.find();
     res.status(200).send(latestWorkout);
   } catch (err) {
-    res.status(500).send("Internal Server Error")
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+app.put("/api/workouts/:id", async (req, res) => {
+  try {
+    const response = await db.Workout.findByIdAndUpdate(req.params.id, {
+      $push: { exercises: req.body },
+    });
+    console.log(response);
+  } catch (err) {
+    res.status(500).send("Internal Server Error");
   }
 });
