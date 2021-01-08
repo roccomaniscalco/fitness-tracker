@@ -36,7 +36,7 @@ app.listen(PORT, () => {
 app.get("/api/workouts", async (req, res) => {
   try {
     const latestWorkout = await db.Workout.find();
-    res.status(200).send(latestWorkout);
+    res.status(200).json(latestWorkout);
   } catch (err) {
     res.status(500).send("Internal Server Error");
   }
@@ -44,11 +44,20 @@ app.get("/api/workouts", async (req, res) => {
 
 app.put("/api/workouts/:id", async (req, res) => {
   try {
-    const response = await db.Workout.findByIdAndUpdate(req.params.id, {
+    const updatedWorkout = await db.Workout.findByIdAndUpdate(req.params.id, {
       $push: { exercises: req.body },
     });
-    console.log(response);
+    res.status(200).json(updatedWorkout);
   } catch (err) {
     res.status(500).send("Internal Server Error");
+  }
+});
+
+app.post("/api/workouts", async (req, res) => {
+  try {
+    const newWorkout = await db.Workout.create(req.body);
+    res.status(200).json(newWorkout);
+  } catch (err) {
+    res.status(500).send(err);
   }
 });
